@@ -4,10 +4,10 @@ from pathlib import Path
 def read_json():
     if (not Path('tasks.json').exists()):
         Path('tasks.json').touch()
-        return {'tasks': []}
-    else:
-        with open('tasks.json', encoding='utf-8') as f:
-            return json.load(f)
+        write_json({'tasks': []})
+
+    with open('tasks.json', encoding='utf-8') as f:
+        return json.load(f)
    
 def write_json(tasks):
     with open('tasks.json', 'w') as f:
@@ -25,14 +25,16 @@ def list(rango):
 
 def add():
     tasks = read_json()
-    task = {'id': 1,
+    length = len(tasks['tasks'])
+    
+    task = {'id': length + 1,
             'description': args[2],
             'status': 'todo',
-            'create_at': datetime.datetime.now(),
-            'updated_at': datetime.datetime.now()
+            'create_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'updated_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
-    
-    tasks['tasks'].push(task)
+
+    tasks['tasks'].append(task)
     write_json(tasks)
 
 def get_key(tasks):
