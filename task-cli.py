@@ -37,12 +37,6 @@ def add():
     tasks['tasks'].append(task)
     write_json(tasks)
 
-def delete():
-    tasks = read_json()
-    key = get_key(tasks)
-    if (key):
-        del tasks[key]
-        write_json(tasks)
 
 def mark_done():
     print('hrllo')
@@ -60,18 +54,27 @@ def get_index(tasks):
         index += 1
     return index if index < len(tasks['tasks']) else -1
 
-def update():
+def delete(tasks, index):
+    del tasks['tasks'][index]
+    write_json(tasks)
+
+def update(tasks, index):
+    tasks['tasks'][index]['description'] = args[3]
+    tasks['tasks'][index]['updated_at'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    write_json(tasks)
+
+def modify(option):
     tasks = read_json()
-    print(tasks)
     index = get_index(tasks)
     if (index < 0):
         print('No existe la tarea')
         return
     
-    tasks['tasks'][index]['description'] = args[3]
-    tasks['tasks'][index]['updated_at'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(tasks)
-    write_json(tasks)
+    if (option == 'update'):
+        update(tasks, index)
+    elif (option == 'delete'): 
+        delete(tasks, index)
+
     
 
 args = sys.argv
@@ -84,7 +87,7 @@ if (len(args) == 3):
     if (args[1] == 'add'):
         add()
     if (args[1] == 'delete'):
-        delete()
+        modify('delete')
     if (args[1] == 'list'):
         list(args[2])
     if (args[1] == 'mark-done'):
@@ -93,4 +96,4 @@ if (len(args) == 3):
         mark_in_progress()
 
 if (len(args) == 4):
-    update()
+    modify('update')
