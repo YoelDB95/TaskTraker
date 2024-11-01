@@ -37,19 +37,6 @@ def add():
     tasks['tasks'].append(task)
     write_json(tasks)
 
-def get_key(tasks):
-    index = 1
-    keys = tasks.keys()
-    if (len(keys) >= int(args[2])):
-        for task in tasks:
-            if (index == int(args[2])):
-                break
-            index += 1
-        return task
-    
-    print('El valor ingresado supera la cantidad de elementos')
-    return
-
 def delete():
     tasks = read_json()
     key = get_key(tasks)
@@ -63,11 +50,27 @@ def mark_done():
 def mark_in_progress():
     print('hrllo')
 
+
+def get_index(tasks):
+    index = 0
+    
+    for task in tasks['tasks']:
+        if (task['id'] == int(args[2])):
+            break
+        index += 1
+    return index if index < len(tasks['tasks']) else -1
+
 def update():
     tasks = read_json()
-    key = get_key(tasks)
-    tasks[args[3]] = tasks[key]
-    del tasks[key]
+    print(tasks)
+    index = get_index(tasks)
+    if (index < 0):
+        print('No existe la tarea')
+        return
+    
+    tasks['tasks'][index]['description'] = args[3]
+    tasks['tasks'][index]['updated_at'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(tasks)
     write_json(tasks)
     
 
