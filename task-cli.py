@@ -13,14 +13,14 @@ def write_json(tasks):
     with open('tasks.json', 'w') as f:
         json.dump(tasks, f)
 
-def list(rango): 
+def list(filter): 
     tasks = read_json()
-    if (rango == 'all'):
-        for task in tasks:
-            print(task, tasks[task])
+    if (filter == 'none'):
+        for task in tasks['tasks']:
+            print(task)
     else:
         for task in tasks:
-            if (tasks[task] == rango):
+            if (task['status'] == filter):
                 print(task)
 
 def add():
@@ -75,7 +75,7 @@ args = sys.argv
 
     
 if (len(args) == 2):
-    list('all')
+    list('none')
 
 if (len(args) == 3):
     if (args[1] == 'add'):
