@@ -25,9 +25,9 @@ def list(filter):
 
 def add():
     tasks = read_json()
-    length = len(tasks['tasks'])
+    length = len(tasks['tasks']) - 1
     
-    task = {'id': length + 1,
+    task = {'id': tasks['tasks'][length]['id'] + 1,
             'description': args[2],
             'status': 'todo',
             'create_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -36,14 +36,6 @@ def add():
 
     tasks['tasks'].append(task)
     write_json(tasks)
-
-
-def mark_done():
-    print('hrllo')
-
-def mark_in_progress():
-    print('hrllo')
-
 
 def get_index(tasks):
     index = 0
@@ -63,6 +55,11 @@ def update(tasks, index):
     tasks['tasks'][index]['updated_at'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     write_json(tasks)
 
+def mark(tasks, index, status):
+    tasks['tasks'][index]['status'] = status
+    write_json((tasks))
+
+
 def modify(option):
     tasks = read_json()
     index = get_index(tasks)
@@ -74,12 +71,13 @@ def modify(option):
         update(tasks, index)
     elif (option == 'delete'): 
         delete(tasks, index)
-
-    
+    elif (option == 'done'):
+        mark(tasks, index, 'done')
+    elif (option == 'in-progress'):
+        mark(tasks, index, 'in-progress')
 
 args = sys.argv
 
-    
 if (len(args) == 2):
     list('none')
 
@@ -91,9 +89,9 @@ if (len(args) == 3):
     if (args[1] == 'list'):
         list(args[2])
     if (args[1] == 'mark-done'):
-        mark_done()
+        modify('done')
     if (args[1] == 'mark-in-progress'):
-        mark_in_progress()
+        modify('in-progress')
 
 if (len(args) == 4):
     modify('update')
