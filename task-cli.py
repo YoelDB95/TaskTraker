@@ -15,19 +15,22 @@ def write_json(tasks):
 
 def list(filter): 
     tasks = read_json()
+    
     if (filter == 'none'):
+        print('These are all your tasks')
         for task in tasks['tasks']:
             print(task)
     else:
-        for task in tasks:
+        print(f'These are all your tasks {filter}')
+        for task in tasks['tasks']:
             if (task['status'] == filter):
                 print(task)
 
 def add():
     tasks = read_json()
     length = len(tasks['tasks']) - 1
-    
-    task = {'id': tasks['tasks'][length]['id'] + 1,
+    id = tasks['tasks'][length]['id'] + 1
+    task = {'id': id,
             'description': args[2],
             'status': 'todo',
             'create_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -36,6 +39,7 @@ def add():
 
     tasks['tasks'].append(task)
     write_json(tasks)
+    print(f'Task added successfully (ID: {id})')
 
 def get_index(tasks):
     index = 0
@@ -49,15 +53,18 @@ def get_index(tasks):
 def delete(tasks, index):
     del tasks['tasks'][index]
     write_json(tasks)
+    print(f'Task deleted successfully (ID: {index})')
 
 def update(tasks, index):
     tasks['tasks'][index]['description'] = args[3]
     tasks['tasks'][index]['updated_at'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     write_json(tasks)
+    print(f'Task updated successfully (ID: {index})')
 
 def mark(tasks, index, status):
     tasks['tasks'][index]['status'] = status
     write_json((tasks))
+    print(f'Task modified successfully (ID: {id})')
 
 
 def modify(option):
