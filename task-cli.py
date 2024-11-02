@@ -6,12 +6,18 @@ def read_json():
         Path('tasks.json').touch()
         write_json({'tasks': []})
 
-    with open('tasks.json', encoding='utf-8') as f:
-        return json.load(f)
+    try:
+        with open('tasks.json', encoding='utf-8') as f:
+            return json.load(f)
+    except IOError as e:
+        print(str(e))
    
 def write_json(tasks):
-    with open('tasks.json', 'w') as f:
-        json.dump(tasks, f)
+    try:
+        with open('tasks.json', 'w') as f:
+            json.dump(tasks, f)
+    except IOError as e:
+        print(e)
 
 def list(filter): 
     tasks = read_json()
@@ -85,20 +91,20 @@ def modify(option):
 
 args = sys.argv
 
-if (len(args) == 2):
+if (len(args) == 2 and args[1] == 'list'):
     list('none')
 
 if (len(args) == 3):
     if (args[1] == 'add'):
         add()
-    if (args[1] == 'delete'):
+    if (args[1] == 'delete'  and isinstance(args[2],int)):
         modify('delete')
     if (args[1] == 'list'):
         list(args[2])
-    if (args[1] == 'mark-done'):
+    if (args[1] == 'mark-done' and isinstance(args[2],int)):
         modify('done')
-    if (args[1] == 'mark-in-progress'):
+    if (args[1] == 'mark-in-progress'  and isinstance(args[2],int)):
         modify('in-progress')
 
-if (len(args) == 4):
+if (len(args) == 4 and args[1] == 'update' and isinstance(args[2],int)):
     modify('update')
